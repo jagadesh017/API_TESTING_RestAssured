@@ -2,8 +2,12 @@ package tests;
 
 import endpoints.APIEndpoints;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.APIUtils;
+
+import static org.hamcrest.Matchers.equalTo;
 
 public class UserTests {
     String id;
@@ -12,14 +16,31 @@ public class UserTests {
         Response response=
                 APIUtils.postUser(APIEndpoints.USER_POST)
                         .then().log().all().extract().response();
+       String ContentType = response.getHeader("Content-Type");
+       Assert.assertEquals(ContentType,"application/json");
+       System.out.println("Content-Type: " + ContentType);
+
         if(response.getStatusCode() == 201){
             System.out.println("User data created successfully.");
         }else {
             System.out.println("Failed to create user. Status code: " + response.getStatusCode());
         }
+       String name= response.body().jsonPath().get("customer");
+        Assert.assertEquals(name,"keerthi");
+        System.out.println("Customer name is: " + name);
 
          id= response.jsonPath().getString("id");
         System.out.println("Created user ID is: " + id);
+    }
+    @Test(dependsOnMethods = "createUserDetails")
+    public void getUserBodyValues(){
+        Response response=
+                APIUtils.getUser(APIEndpoints.USER_GET_ID,id)
+                        .then().log().body().extract().response();
+        System.out.println("User body is: " + response.getBody().asString());
+       String name= response.jsonPath().getString("customer");
+        Assert.assertEquals(name, "keerthi", "User name validation failed!");
+        System.out.println("User name is: " + name);
     }
 
     @Test(dependsOnMethods = "createUserDetails")
@@ -51,6 +72,10 @@ public class UserTests {
         Response response=
                 APIUtils.updateUser(APIEndpoints.USER_UPDATE,id)
                 .then().log().all().extract().response();
+        if(response.getStatusCode() == 200){
+            System.out.println("User details updated successfully.");
+        }else{
+            System.out.println("Failed to update user details. Status code: " + response.getStatusCode());
+        }
     }
-
 }
