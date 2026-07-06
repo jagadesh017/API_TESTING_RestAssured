@@ -10,6 +10,7 @@ public class APIUtils {
 
     static UsersData data = new UsersData();
     static UsersData data1 = new UsersData();
+    static Response response;
     public static UsersData getData() {
         data.setId(10);
         data.setCustomer("keerthi");
@@ -27,25 +28,22 @@ public class APIUtils {
         return data1;
     }
     public static Response postUser(String endpoint) {
-        Response response = given()
+         response = given()
                 .accept(ContentType.JSON)
                 .body(getData())
                 .when().post(endpoint);
         return response;
     }
 
-    public static Response getUser(String endpoint,String userId) {
-        Response response = given()
-                .accept(ContentType.JSON)
+    public static Response getUser(String userId,String endpoint) {
+         response = given()
                 .pathParam("id", userId)
                 .when().get(endpoint);
         return response;
     }
 
-
-
     public static Response updateUser(String endpoint,String userId) {
-        Response response = given()
+         response = given()
                 .accept(ContentType.JSON)
                 .pathParam("id", userId)
                 .body(updateData())
@@ -54,7 +52,7 @@ public class APIUtils {
     }
 
     public static Response deleteUser(String endpoint,String userId) {
-        Response response =
+         response =
                 given()
                         .accept(ContentType.JSON)
                         .pathParam("id", userId)

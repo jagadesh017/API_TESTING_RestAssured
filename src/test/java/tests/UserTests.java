@@ -2,12 +2,9 @@ package tests;
 
 import endpoints.APIEndpoints;
 import io.restassured.response.Response;
-import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import utils.APIUtils;
-
-import static org.hamcrest.Matchers.equalTo;
 
 public class UserTests {
     String id;
@@ -46,7 +43,7 @@ public class UserTests {
     @Test(dependsOnMethods = "createUserDetails")
     public void getUserIDDetails(){
         Response response =
-                APIUtils.getUser(APIEndpoints.USER_GET_ID, id)
+                APIUtils.getUser(id,APIEndpoints.USER_GET_ID)
                 .then().log().all().extract().response();
 
         if(response.getStatusCode() == 200){

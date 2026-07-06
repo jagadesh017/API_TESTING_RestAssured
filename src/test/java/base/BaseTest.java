@@ -9,7 +9,7 @@ import java.io.IOException;
 public class BaseTest {
 
     @BeforeClass
-    public void setUp() throws IOException {
+    public static void setUp() throws IOException {
         RestAssured.baseURI = ReadPropertyFile.getRoutesFromPropertyFile("baseUrl");
 
     }
